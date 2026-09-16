@@ -1,0 +1,77 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.kartu {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin: 0 auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kartu:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.kartu__sampul img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.kartu__konten {
+    padding: 20px;
+}
+
+.kartu__judul {
+    color: #153e75;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.kartu__deskripsi {
+    color: #555;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.kartu__media {
+    margin-bottom: 15px;
+}
+
+.kartu__media h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.kartu__video, .kartu__audio {
+    width: 100%;
+    border-radius: 8px;
+    outline: none;
+}
+
+.kartu.kartu--aktif .kartu__deskripsi {
+    color: #555555;
+    font-weight: bold;
+}

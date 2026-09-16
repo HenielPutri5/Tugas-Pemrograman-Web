@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas Mandiri: Pemutar Media Kuliah</title>
+    <!-- Untuk terhubung ke CSS -->
+    <link rel="stylesheet" href="03-tugas-style.css">
+</head>
+<body>
+
+    <article class="kartu">
+        
+        <!-- Memanggil sampul -->
+        <picture class="kartu__sampul">
+            <source media="(min-width: 768px)" srcset="SampulLaptop.webp" type="image/webp">
+            <source media="(max-width: 767px)" srcset="SampulHP.webp" type="image/webp">
+            <img src="SampulLaptop.webp" alt="Ilustrasi Materi Kuliah">
+        </picture>
+
+        <div class="kartu__konten">
+            <h2 class="kartu__judul">Video ajar: Membuat Efek Play Video on Scroll di Elementor Tanpa Plugin</h2>
+            <p class="kartu__deskripsi">Materi ini membahas panduan teknis membuat efek memutar video saat layar digulir (play video on scroll) di Elementor tanpa plugin tambahan menggunakan kode GSAP, yang mencakup pengaturan kontainer sticky, tumpang tindih konten (z-index), hingga optimasi video ke 30 FPS agar berjalan mulus.</p>
+            
+            <!-- Memanggil Poster dan Video -->
+            <div class="kartu__media">
+                <video controls poster="Poster.png" class="kartu__video">
+                    <source src="Video.webm" type="video/webm">
+                    <source src="Video.mp4" type="video/mp4">
+                    Maaf, peramban Anda tidak mendukung pemutar video ini.
+                </video>
+            </div>
+
+            <!-- Audio -->
+            <div class="kartu__media">
+                <h3>Dengarkan Penjelasan Audio</h3>
+                <audio controls class="kartu__audio">
+                    <source src="Audio.mp3" type="audio/mpeg">
+                    Maaf, peramban Anda tidak mendukung pemutar audio ini.
+                </audio>
+            </div>
+        </div>
+
+    </article>
+
+</body>
+</html>
