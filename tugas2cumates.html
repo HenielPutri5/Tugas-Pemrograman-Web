@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Publikasi Penelitian Dosen</title>
+    
+    <!-- CSS Internal untuk mengatur tampilan tabel agar sesuai standar W3C (tanpa atribut usang) -->
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo Instansi -->
+    <img src="UI.png" alt="Universitas Indonesia" width="100">
+    
+    <h1>Daftar Publikasi Penelitian Dosen</h1>
+
+    <!-- Deskripsi Bidang Keahlian (Ordered & Unordered List) -->
+    <h2>Bidang Keahlian Dosen</h2>
+    <ol>
+        <li>S2 Ilmu Komputer
+            <ul>
+                <li>Mobile Commerce &amp; E-Business</li>
+                <li>Artificial Intelligence (AI)</li>
+            </ul>
+        </li>
+        <li>S2 Teknologi Informasi
+            <ul>
+                <li>Information Security &amp; Data Protection</li>
+                <li>Knowledge Discovery &amp; Data Mining</li>
+            </ul>
+        </li>
+    </ol>
+
+    <!-- Tabel Publikasi Kompleks (Thead, Tbody, Tfoot, Rowspan, Colspan, Scope) -->
+    <h2>Data Publikasi Ilmiah (Tahun 2026)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th scope="col" rowspan="2" class="text-center">No</th>
+                <th scope="col" rowspan="2">Nama Dosen &amp; Institusi</th>
+                <th scope="col" colspan="2" class="text-center">Detail Publikasi</th>
+            </tr>
+            <tr>
+                <th scope="col">Judul Publikasi</th>
+                <th scope="col">Tahun</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <!-- Data Dosen 1 -->
+            <tr>
+                <th scope="row" rowspan="2" class="text-center">1</th>
+                <td rowspan="2">
+                    <strong>Putu Wuri Handayani</strong><br>
+                    Universitas Indonesia
+                </td>
+                <td>Mobile commerce acceptance among micro, small, and medium enterprises in Indonesia: A case in the culinary sector</td>
+                <td>2026</td>
+            </tr>
+            <tr>
+                <td>How Artificial Intelligence Changes Physicians’ Role Perceptions in Indonesia</td>
+                <td>2026</td>
+            </tr>
+
+            <!-- Data Dosen 2 -->
+            <tr>
+                <th scope="row" rowspan="2" class="text-center">2</th>
+                <td rowspan="2">
+                    <strong>Dana Indra Sensuse</strong><br>
+                    Universitas Indonesia
+                </td>
+                <td>Analysis of Public Sentiment Indonesia’s Personal Data Protection Law: A Comparison of SVM and IndoBERT on X Platform</td>
+                <td>2026</td>
+            </tr>
+            <tr>
+                <td>Pemetaan Topik dan Sentimen Pengguna Aplikasi JAKI untuk Mendukung Knowledge Discovery dalam Peningkatan Layanan Publik</td>
+                <td>2026</td>
+            </tr>
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <td colspan="3" style="text-align: right; font-weight: bold;">Total Publikasi (2026):</td>
+                <td>4 Jurnal</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <!-- Diagram Alur Metodologi Riset (Figure & Figcaption) -->
+    <h2>Metodologi Riset</h2>
+    <figure>
+        <img src="diagram-alur.png" alt="Diagram Alur Metodologi Riset Analisis Sentimen" width="400">
+        <figcaption>Gambar 1. Diagram Alur Metodologi Riset Analisis Sentimen menggunakan Machine Learning.</figcaption>
+    </figure>
+
+    <!-- Deskripsi Riset dengan minimal 3 Karakter Khusus -->
+    <h2>Deskripsi Riset</h2>
+    <p>
+        Penelitian yang dilakukan berfokus pada komparasi algoritma, analisis sentimen publik, <strong>&amp;</strong> tata kelola TI. 
+        Dalam pengujian model <em>Machine Learning</em>, kami menargetkan akurasi agar selalu lebih dari standar minimal (<strong>&gt;</strong> 80%), 
+        serta menekan angka galat (*error rate*) hingga kurang dari ambang batas wajar (<strong>&lt;</strong> 5%). 
+        Hak Cipta Penelitian <strong>&copy;</strong> 2026 Universitas Indonesia.
+    </p>
+
+</body>
+</html>
