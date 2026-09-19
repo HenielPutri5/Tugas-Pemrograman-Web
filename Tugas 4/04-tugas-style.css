@@ -78,3 +78,28 @@ body {
     color: #1a365d;
     font-weight: 500;
 }
+
+/* Kolom Tengah */
+.section-title {
+    color: #1a365d;
+    font-weight: 400;
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+}
+
+.card-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.article-card .card-title {
+    color: #1a365d;
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.article-card .badge {
+    font-weight: 500;
+    padding: 6px 10px;
+}
