@@ -124,3 +124,21 @@ body {
         padding: 20px;
     }
 }
+
+/* B. Mode Tablet */
+@media (min-width: 768px) and (max-width: 991px) {
+    .main-layout {
+        grid-template-columns: 200px 1fr;
+    }
+    
+    .right-column {
+        grid-column: 1 / -1; 
+        display: flex;
+        gap: 20px;
+    }
+
+    .right-column .info-card {
+        flex: 1;
+        margin-bottom: 0 !important;
+    }
+}
