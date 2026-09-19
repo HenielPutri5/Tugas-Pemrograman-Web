@@ -103,3 +103,24 @@ body {
     font-weight: 500;
     padding: 6px 10px;
 }
+
+/* A. Mode Ponsel */
+@media (max-width: 767px) {
+    .site-navbar {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+        padding: 15px 20px;
+    }
+    
+    .nav-links {
+        flex-direction: column; 
+        width: 100%;
+        gap: 12px;
+    }
+
+    .main-layout {
+        grid-template-columns: 1fr; 
+        padding: 20px;
+    }
+}
