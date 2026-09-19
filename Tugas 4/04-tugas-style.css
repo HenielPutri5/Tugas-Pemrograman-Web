@@ -142,3 +142,10 @@ body {
         margin-bottom: 0 !important;
     }
 }
+
+/* C. Mode Layar Lebar */
+@media (min-width: 992px) {
+    .main-layout {
+        grid-template-columns: 200px 1fr 220px;
+    }
+}
