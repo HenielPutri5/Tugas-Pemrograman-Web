@@ -36,3 +36,45 @@ body {
 .nav-links a:hover {
     color: white;
 }
+
+.main-layout {
+    display: grid;
+    gap: 25px;
+    padding: 30px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Kolom Kiri & Kanan Styling */
+.sidebar-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.sidebar-title {
+    color: #1a365d;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.clean-list {
+    list-style: none;
+    padding: 0;
+}
+
+.clean-list li {
+    margin-bottom: 15px;
+}
+
+.clean-list a {
+    text-decoration: none;
+    color: #4a5568;
+    font-size: 0.95rem;
+}
+
+.clean-list a:hover {
+    color: #1a365d;
+    font-weight: 500;
+}
