@@ -128,6 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
 
+        
         <!-- Riwayat Transaksi -->
         <?php if (!empty($_SESSION['transactions'])): ?>
             <div class="card shadow-sm">
@@ -148,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <tbody>
                                 <?php foreach (array_reverse($_SESSION['transactions']) as $trx): ?>
                                     <tr>
-                                        <!-- Pencegahan XSS dengan htmlspecialchars -->
+                                        <!-- XSS dengan htmlspecialchars -->
                                         <td><small class="text-muted"><?= htmlspecialchars($trx['id']) ?></small></td>
                                         <td><?= htmlspecialchars($trx['date']) ?></td>
                                         <td>
