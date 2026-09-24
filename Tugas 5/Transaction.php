@@ -46,18 +46,33 @@ class Transaction
             default => 'Jenis transaksi tidak valid.'
         };
 
+        // Jika berhasil, simpan ke riwayat transaksi
+        if ($processResult === true) {
+            $_SESSION['transactions'][] = [
+                'id' => $this->id,
+                'type' => $this->type,
+                'amount' => $this->amount,
+                'date' => date('Y-m-d H:i:s')
+            ];
+            return true;
+        }
+
+        // Kembalikan pesan error jika gagal (misal saldo tidak cukup)
         return $processResult;
     }
 
     private function handleDeposit(): bool
     {
-        // TODO: implementasi logika deposit
+        $_SESSION['balance'] += $this->amount;
         return true;
     }
 
     private function handleWithdraw(): bool|string
     {
-        // TODO: implementasi logika penarikan dengan validasi saldo
+        if ($_SESSION['balance'] < $this->amount) {
+            return 'Penarikan ditolak: Saldo dalam sesi tidak mencukupi.';
+        }
+        $_SESSION['balance'] -= $this->amount;
         return true;
     }
 }
