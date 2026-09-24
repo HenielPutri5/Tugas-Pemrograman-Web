@@ -14,10 +14,22 @@ if (!isset($_SESSION['transactions'])) {
     $_SESSION['transactions'] = [];
 }
 
+// Generate CSRF Token
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 $errors = [];
 $successMessage = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // Verifikasi CSRF Token
+    $postToken = $_POST['csrf_token'] ?? '';
+    if (!hash_equals($_SESSION['csrf_token'], $postToken)) {
+        die('Kesalahan Keamanan: Token CSRF tidak cocok.');
+    }
+
     $type = trim($_POST['type'] ?? '');
     $amountRaw = trim($_POST['amount'] ?? '');
 
@@ -41,6 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result === true) {
             $label = $type === 'deposit' ? 'Deposit' : 'Penarikan';
             $successMessage = "Transaksi {$label} sebesar Rp " . number_format($amount, 2, ',', '.') . " berhasil diproses!";
+
+            // Regenerasi CSRF token setelah operasi berhasil
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         } else {
             $errors[] = $result;
         }
@@ -69,6 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form action="./finance.php" method="POST">
+        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+
         <select name="type">
             <option value="" disabled selected>Pilih jenis transaksi...</option>
             <option value="deposit">Deposit</option>
