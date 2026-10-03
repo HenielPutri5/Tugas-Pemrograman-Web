@@ -327,3 +327,51 @@ CREATE TABLE peminjaman (
         ON UPDATE CASCADE ON DELETE RESTRICT
 );
 ```
+## 5. Visualisasi Relasi Kunci
+### 5.1 Diagram ERD (Mermaid)
+
+```mermaid
+erDiagram
+    PENERBIT ||--o{ BUKU : "menerbitkan"
+    MAHASISWA ||--o{ PEMINJAMAN : "melakukan"
+    BUKU ||--o{ PEMINJAMAN : "dipinjam dalam"
+
+    MAHASISWA {
+        varchar_15 nim PK
+        varchar_100 nama_mahasiswa
+        smallint angkatan
+        varchar_50 program_studi
+        varchar_100 email UK
+        varchar_15 no_hp
+    }
+
+    PENERBIT {
+        varchar_10 id_penerbit PK
+        varchar_100 nama_penerbit
+        varchar_255 alamat
+        varchar_50 kota
+        varchar_20 telepon
+    }
+
+    BUKU {
+        varchar_10 id_buku PK
+        varchar_17 isbn UK
+        varchar_200 judul
+        varchar_100 pengarang
+        smallint tahun_terbit
+        varchar_50 kategori
+        int jumlah_stok
+        varchar_10 id_penerbit FK
+    }
+
+    PEMINJAMAN {
+        varchar_10 id_transaksi PK
+        varchar_15 nim FK
+        varchar_10 id_buku FK
+        date tgl_pinjam
+        date tgl_jatuh_tempo
+        date tgl_kembali
+        enum status_pinjam
+        decimal denda
+    }
+```
