@@ -217,3 +217,55 @@ UNF  ──►  1NF  ──►  2NF  ──►  3NF
  │         └─ Pecah repeating group, atomisasi nilai, tetapkan PK
  └─ Satu tabel besar dengan banyak nilai per sel
 ```
+## 4. Rancangan Tabel Akhir (Dilengkapi Tipe Data)
+
+Tipe data mengacu pada MySQL/MariaDB.
+
+### 4.1 Tabel `mahasiswa`
+
+| Kolom | Tipe Data | Konstrain | Keterangan |
+|---|---|---|---|
+| nim | VARCHAR(15) | **PRIMARY KEY** | Nomor Induk Mahasiswa |
+| nama_mahasiswa | VARCHAR(100) | NOT NULL | Nama lengkap |
+| angkatan | SMALLINT | NOT NULL | Tahun masuk |
+| program_studi | VARCHAR(50) | NOT NULL | Program studi |
+| email | VARCHAR(100) | NOT NULL, UNIQUE | Email mahasiswa |
+| no_hp | VARCHAR(15) | NULL | Nomor telepon |
+
+### 4.2 Tabel `penerbit`
+
+| Kolom | Tipe Data | Konstrain | Keterangan |
+|---|---|---|---|
+| id_penerbit | VARCHAR(10) | **PRIMARY KEY** | Kode penerbit |
+| nama_penerbit | VARCHAR(100) | NOT NULL | Nama penerbit |
+| alamat | VARCHAR(255) | NULL | Alamat lengkap |
+| kota | VARCHAR(50) | NOT NULL | Kota penerbit |
+| telepon | VARCHAR(20) | NULL | Nomor telepon |
+
+### 4.3 Tabel `buku`
+
+| Kolom | Tipe Data | Konstrain | Keterangan |
+|---|---|---|---|
+| id_buku | VARCHAR(10) | **PRIMARY KEY** | Kode buku |
+| isbn | VARCHAR(17) | NOT NULL, UNIQUE | Nomor ISBN |
+| judul | VARCHAR(200) | NOT NULL | Judul buku |
+| pengarang | VARCHAR(100) | NOT NULL | Nama pengarang |
+| tahun_terbit | SMALLINT | NOT NULL | Tahun terbit |
+| kategori | VARCHAR(50) | NULL | Kategori buku |
+| jumlah_stok | INT | NOT NULL, DEFAULT 0, CHECK (jumlah_stok >= 0) | Stok eksemplar |
+| id_penerbit | VARCHAR(10) | NOT NULL, **FOREIGN KEY** → penerbit(id_penerbit) | Penerbit buku |
+
+### 4.4 Tabel `peminjaman`
+
+| Kolom | Tipe Data | Konstrain | Keterangan |
+|---|---|---|---|
+| id_transaksi | VARCHAR(10) | **PRIMARY KEY** | Kode transaksi |
+| nim | VARCHAR(15) | NOT NULL, **FOREIGN KEY** → mahasiswa(nim) | Peminjam |
+| id_buku | VARCHAR(10) | NOT NULL, **FOREIGN KEY** → buku(id_buku) | Buku yang dipinjam |
+| tgl_pinjam | DATE | NOT NULL | Tanggal pinjam |
+| tgl_jatuh_tempo | DATE | NOT NULL | Batas pengembalian |
+| tgl_kembali | DATE | NULL | Tanggal kembali (NULL = belum kembali) |
+| status_pinjam | ENUM('DIPINJAM','DIKEMBALIKAN','TERLAMBAT') | NOT NULL, DEFAULT 'DIPINJAM' | Status transaksi |
+| denda | DECIMAL(10,2) | NOT NULL, DEFAULT 0.00 | Denda dalam rupiah |
+
+Batasan tambahan: `UNIQUE (nim, id_buku, tgl_pinjam)` dan `CHECK (tgl_jatuh_tempo >= tgl_pinjam)`.
