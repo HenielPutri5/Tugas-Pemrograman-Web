@@ -375,3 +375,18 @@ erDiagram
         decimal denda
     }
 ```
+### 5.2 Penjelasan Kardinalitas
+
+| Relasi | Kardinalitas | Penjelasan |
+|---|---|---|
+| PENERBIT – BUKU | 1 : N | Satu penerbit menerbitkan banyak buku; satu buku hanya punya satu penerbit. FK: `buku.id_penerbit` |
+| MAHASISWA – PEMINJAMAN | 1 : N | Satu mahasiswa dapat melakukan banyak transaksi; satu transaksi dimiliki satu mahasiswa. FK: `peminjaman.nim` |
+| BUKU – PEMINJAMAN | 1 : N | Satu buku dapat muncul di banyak transaksi; satu transaksi mencatat satu buku. FK: `peminjaman.id_buku` |
+| MAHASISWA – BUKU | M : N | Diselesaikan melalui tabel asosiatif `peminjaman` |
+
+**Alur arah Foreign Key:**
+```
+peminjaman.nim        ───►  mahasiswa.nim
+peminjaman.id_buku    ───►  buku.id_buku
+buku.id_penerbit      ───►  penerbit.id_penerbit
+```
