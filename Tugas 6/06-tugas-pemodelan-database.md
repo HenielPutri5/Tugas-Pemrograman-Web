@@ -79,3 +79,42 @@ Dirancang basis data relasional untuk sistem peminjaman buku perpustakaan kampus
 | penerbit | id_penerbit | - |
 | buku | id_buku | id_penerbit → penerbit(id_penerbit) |
 | peminjaman | id_transaksi | nim → mahasiswa(nim); id_buku → buku(id_buku) |
+
+## 3. Simulasi Normalisasi
+### 3.1 Bentuk Tidak Normal (UNF)
+
+Data mentah dari kartu/slip peminjaman disimpan dalam satu tabel besar. Satu baris dapat berisi beberapa buku sekaligus dalam satu sel (*repeating group*).
+
+**Atribut UNF:** nim, nama_mahasiswa, program_studi, email, {id_buku, judul, isbn, pengarang, id_penerbit, nama_penerbit, kota_penerbit, tgl_pinjam, tgl_jatuh_tempo, tgl_kembali, status_pinjam, denda}
+
+> Atribut lain (angkatan, no_hp, tahun_terbit, kategori, jumlah_stok, alamat, telepon) tidak ditampilkan agar tabel ringkas. Atribut tersebut mengikuti determinannya pada tahap berikutnya.
+
+| nim | nama_mahasiswa | program_studi | email | id_buku | judul | isbn | pengarang | id_penerbit | nama_penerbit | kota_penerbit | tgl_pinjam | tgl_jatuh_tempo | tgl_kembali | status_pinjam | denda |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1012401 | Rizky Putra | Teknik Informatika | Putrariz22@kampus.ac.id | B001, B002 | Basis Data, Algoritma dan Pemrograman | 978-602-1234-01-1, 978-602-1234-02-8 | Andi Fahri, Burhan Ahmad | P01, P02 | Informatika Bandung, Andi Offset | Bandung, Yogyakarta | 2026-09-01, 2026-09-01 | 2026-09-08, 2026-09-08 | 2026-09-07, 2026-09-10 | DIKEMBALIKAN, TERLAMBAT | 0, 2000 |
+| 1012402 | Putri Ayu | Sistem Informasi | Putri4yu@kampus.ac.id | B002 | Algoritma dan Pemrograman | 978-602-1234-02-8 | Burhan Ahmad | P02 | Andi Offset | Yogyakarta | 2026-09-10 | 2026-09-17 | NULL | DIPINJAM | 0 |
+| 1012305 | Jingga Mawar | Teknik Informatika | Rosee53@kampus.ac.id | B003 | Jaringan Komputer | 978-602-1234-03-5 | Uan Santoso | P03 | Erlangga | Jakarta | 2026-09-15 | 2026-09-22 | NULL | DIPINJAM | 0 |
+
+**Masalah pada UNF:**
+
+- Sel berisi banyak nilai (tidak atomik), sehingga sulit dicari dan diperbarui.
+- Terjadi pengulangan data (misalnya data buku B002 muncul di dua baris).
+
+### 3.2 Bentuk Normal Pertama (1NF)
+
+**Syarat 1NF:**
+
+1. Setiap sel hanya berisi satu nilai (atomik).
+2. Tidak ada kelompok atribut yang berulang.
+3. Setiap baris dapat diidentifikasi dengan primary key.
+
+**Tindakan:** baris dengan banyak buku dipecah menjadi satu baris per buku. Primary key gabungan: (nim, id_buku, tgl_pinjam).
+
+| **nim** | nama_mahasiswa | program_studi | email | **id_buku** | judul | isbn | pengarang | id_penerbit | nama_penerbit | kota_penerbit | **tgl_pinjam** | tgl_jatuh_tempo | tgl_kembali | status_pinjam | denda |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1012401 | Rizky Putra | Teknik Informatika | Putrariz22@kampus.ac.id | B001 | Basis Data | 978-602-1234-01-1 | Andi Fahri | P01 | Informatika Bandung | Bandung | 2026-09-01 | 2026-09-08 | 2026-09-07 | DIKEMBALIKAN | 0 |
+| 1012401 | Rizky Putra | Teknik Informatika | Putrariz22@kampus.ac.id | B002 | Algoritma dan Pemrograman | 978-602-1234-02-8 | Burhan Ahmad | P02 | Andi Offset | Yogyakarta | 2026-09-01 | 2026-09-08 | 2026-09-10 | TERLAMBAT | 2000 |
+| 1012402 | Putri Ayu | Sistem Informasi | Putri4yu@kampus.ac.id | B002 | Algoritma dan Pemrograman | 978-602-1234-02-8 | Burhan Ahmad | P02 | Andi Offset | Yogyakarta | 2026-09-10 | 2026-09-17 | NULL | DIPINJAM | 0 |
+| 1012305 | Jingga Mawar | Teknik Informatika | Rosee53@kampus.ac.id | B003 | Jaringan Komputer | 978-602-1234-03-5 | Uan Santoso | P03 | Erlangga | Jakarta | 2026-09-15 | 2026-09-22 | NULL | DIPINJAM | 0 |
+
+**Status:** semua sel atomik dan tiap baris punya kunci. Tabel sudah 1NF, tetapi masih ada redundansi (data mahasiswa dan buku berulang).
