@@ -269,3 +269,61 @@ Tipe data mengacu pada MySQL/MariaDB.
 | denda | DECIMAL(10,2) | NOT NULL, DEFAULT 0.00 | Denda dalam rupiah |
 
 Batasan tambahan: `UNIQUE (nim, id_buku, tgl_pinjam)` dan `CHECK (tgl_jatuh_tempo >= tgl_pinjam)`.
+
+### 4.5 Skrip SQL (DDL)
+
+```sql
+CREATE DATABASE IF NOT EXISTS e_library_kampus;
+USE e_library_kampus;
+
+CREATE TABLE mahasiswa (
+    nim             VARCHAR(15)  PRIMARY KEY,
+    nama_mahasiswa  VARCHAR(100) NOT NULL,
+    angkatan        SMALLINT     NOT NULL,
+    program_studi   VARCHAR(50)  NOT NULL,
+    email           VARCHAR(100) NOT NULL UNIQUE,
+    no_hp           VARCHAR(15)
+);
+
+CREATE TABLE penerbit (
+    id_penerbit     VARCHAR(10)  PRIMARY KEY,
+    nama_penerbit   VARCHAR(100) NOT NULL,
+    alamat          VARCHAR(255),
+    kota            VARCHAR(50)  NOT NULL,
+    telepon         VARCHAR(20)
+);
+
+CREATE TABLE buku (
+    id_buku         VARCHAR(10)  PRIMARY KEY,
+    isbn            VARCHAR(17)  NOT NULL UNIQUE,
+    judul           VARCHAR(200) NOT NULL,
+    pengarang       VARCHAR(100) NOT NULL,
+    tahun_terbit    SMALLINT     NOT NULL,
+    kategori        VARCHAR(50),
+    jumlah_stok     INT          NOT NULL DEFAULT 0 CHECK (jumlah_stok >= 0),
+    id_penerbit     VARCHAR(10)  NOT NULL,
+    CONSTRAINT fk_buku_penerbit
+        FOREIGN KEY (id_penerbit) REFERENCES penerbit (id_penerbit)
+        ON UPDATE CASCADE ON DELETE RESTRICT
+);
+
+CREATE TABLE peminjaman (
+    id_transaksi     VARCHAR(10)  PRIMARY KEY,
+    nim              VARCHAR(15)  NOT NULL,
+    id_buku          VARCHAR(10)  NOT NULL,
+    tgl_pinjam       DATE         NOT NULL,
+    tgl_jatuh_tempo  DATE         NOT NULL,
+    tgl_kembali      DATE         NULL,
+    status_pinjam    ENUM('DIPINJAM','DIKEMBALIKAN','TERLAMBAT')
+                                  NOT NULL DEFAULT 'DIPINJAM',
+    denda            DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    CONSTRAINT uq_peminjaman UNIQUE (nim, id_buku, tgl_pinjam),
+    CONSTRAINT chk_tanggal CHECK (tgl_jatuh_tempo >= tgl_pinjam),
+    CONSTRAINT fk_peminjaman_mahasiswa
+        FOREIGN KEY (nim) REFERENCES mahasiswa (nim)
+        ON UPDATE CASCADE ON DELETE RESTRICT,
+    CONSTRAINT fk_peminjaman_buku
+        FOREIGN KEY (id_buku) REFERENCES buku (id_buku)
+        ON UPDATE CASCADE ON DELETE RESTRICT
+);
+```
