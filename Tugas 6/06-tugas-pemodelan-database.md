@@ -159,3 +159,61 @@ Data mentah dari kartu/slip peminjaman disimpan dalam satu tabel besar. Satu bar
 | 1012305 | B003 | 2026-09-15 | 2026-09-22 | NULL | DIPINJAM | 0 |
 
 **Status:** tidak ada lagi ketergantungan parsial, sehingga tabel sudah 2NF. Masih ada redundansi pada tabel Buku (data penerbit berulang untuk setiap buku dari penerbit yang sama).
+
+### 3.4 Bentuk Normal Ketiga (3NF)
+
+**Syarat 3NF:** sudah 2NF dan tidak ada ketergantungan transitif, yaitu atribut non-kunci tidak boleh bergantung pada atribut non-kunci lain.
+
+**Analisis pada tabel Buku:**
+
+```
+id_buku → id_penerbit → nama_penerbit, alamat, kota, telepon
+```
+
+nama_penerbit, alamat, kota, dan telepon bergantung pada id_penerbit (bukan kunci), sehingga terjadi ketergantungan transitif.
+
+**Tindakan:** pisahkan data penerbit ke tabel sendiri. id_penerbit tetap di tabel Buku sebagai Foreign Key.
+
+**Tabel Penerbit** (PK: id_penerbit)
+
+| **id_penerbit** | nama_penerbit | alamat | kota | telepon |
+|---|---|---|---|---|
+| P01 | Informatika Bandung | Jl. Palasari No. 12 | Bandung | 022-5550101 |
+| P02 | Andi Offset | Jl. Beo No. 38 | Yogyakarta | 0274-5550202 |
+| P03 | Erlangga | Jl. H. Baping No. 100 | Jakarta | 021-5550303 |
+
+**Tabel Buku** (PK: id_buku, FK: id_penerbit)
+
+| **id_buku** | judul | isbn | pengarang | tahun_terbit | kategori | jumlah_stok | *id_penerbit* |
+|---|---|---|---|---|---|---|---|
+| B001 | Basis Data | 978-602-1234-01-1 | Andi Fahri | 2020 | Basis Data | 5 | P01 |
+| B002 | Algoritma dan Pemrograman | 978-602-1234-02-8 | Burhan Ahmad | 2019 | Pemrograman | 3 | P02 |
+| B003 | Jaringan Komputer | 978-602-1234-03-5 | Uan Santoso | 2021 | Jaringan | 4 | P03 |
+
+**Tabel Mahasiswa:** tidak berubah (sudah 3NF).
+
+**Tabel Peminjaman:** ditambahkan *surrogate key* id_transaksi sebagai PK yang lebih ringkas. Kombinasi lama (nim, id_buku, tgl_pinjam) dijadikan batasan UNIQUE. Karena nim dan id_buku adalah FK, tabel ini menjadi penghubung antara Mahasiswa dan Buku.
+
+| **id_transaksi** | *nim* | *id_buku* | tgl_pinjam | tgl_jatuh_tempo | tgl_kembali | status_pinjam | denda |
+|---|---|---|---|---|---|---|---|
+| T001 | 1012401 | B001 | 2026-09-01 | 2026-09-08 | 2026-09-07 | DIKEMBALIKAN | 0 |
+| T002 | 1012401 | B002 | 2026-09-01 | 2026-09-08 | 2026-09-10 | TERLAMBAT | 2000 |
+| T003 | 1012402 | B002 | 2026-09-10 | 2026-09-17 | NULL | DIPINJAM | 0 |
+| T004 | 1012305 | B003 | 2026-09-15 | 2026-09-22 | NULL | DIPINJAM | 0 |
+
+> **Catatan desain:** tgl_jatuh_tempo dan denda secara teknis dapat dihitung dari kolom lain. Keduanya sengaja disimpan sebagai data historis, karena kebijakan lama peminjaman dan tarif denda dapat berubah di masa depan tanpa boleh mengubah transaksi lampau.
+
+**Status akhir:** seluruh tabel memenuhi 3NF (empat tabel: mahasiswa, penerbit, buku, peminjaman).
+
+### 3.5 Ringkasan Alur Normalisasi
+
+```
+UNF  ──►  1NF  ──►  2NF  ──►  3NF
+ │         │         │         │
+ │         │         │         └─ Hilangkan ketergantungan transitif
+ │         │         │            (pisahkan PENERBIT dari BUKU)
+ │         │         └─ Hilangkan ketergantungan parsial
+ │         │            (pisahkan MAHASISWA, BUKU, PEMINJAMAN)
+ │         └─ Pecah repeating group, atomisasi nilai, tetapkan PK
+ └─ Satu tabel besar dengan banyak nilai per sel
+```
