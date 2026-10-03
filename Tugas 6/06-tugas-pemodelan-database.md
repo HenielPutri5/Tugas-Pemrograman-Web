@@ -1,5 +1,4 @@
 # Tugas Mandiri Modul 6: Perancangan ERD E-Library Kampus
-
 | Keterangan | Isian |
 |---|---|
 | Nama | Heniel Putri Tangko Ramba Padang |
