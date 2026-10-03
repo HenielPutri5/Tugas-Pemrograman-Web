@@ -118,3 +118,44 @@ Data mentah dari kartu/slip peminjaman disimpan dalam satu tabel besar. Satu bar
 | 1012305 | Jingga Mawar | Teknik Informatika | Rosee53@kampus.ac.id | B003 | Jaringan Komputer | 978-602-1234-03-5 | Uan Santoso | P03 | Erlangga | Jakarta | 2026-09-15 | 2026-09-22 | NULL | DIPINJAM | 0 |
 
 **Status:** semua sel atomik dan tiap baris punya kunci. Tabel sudah 1NF, tetapi masih ada redundansi (data mahasiswa dan buku berulang).
+
+### 3.3 Bentuk Normal Kedua (2NF)
+
+**Syarat 2NF:** sudah 1NF dan tidak ada ketergantungan parsial, yaitu atribut non-kunci tidak boleh bergantung hanya pada sebagian dari primary key gabungan.
+
+**Analisis ketergantungan fungsional** (PK = nim, id_buku, tgl_pinjam):
+
+| Ketergantungan | Jenis |
+|---|---|
+| nim → nama_mahasiswa, angkatan, program_studi, email, no_hp | **Parsial** (hanya bergantung pada `nim`) |
+| id_buku → judul, isbn, pengarang, tahun_terbit, kategori, jumlah_stok, id_penerbit, nama_penerbit, alamat, kota_penerbit, telepon | **Parsial** (hanya bergantung pada `id_buku`) |
+| (nim, id_buku, tgl_pinjam) → tgl_jatuh_tempo, tgl_kembali, status_pinjam, denda | **Penuh** |
+
+**Tindakan:** pecah menjadi tiga tabel.
+
+**Tabel Mahasiswa** (PK: nim)
+
+| **nim** | nama_mahasiswa | angkatan | program_studi | email | no_hp |
+|---|---|---|---|---|---|
+| 1012401 | Rizky Putra | 2024 | Teknik Informatika | Putrariz22@kampus.ac.id | 081234560001 |
+| 1012402 | Putri Ayu | 2024 | Sistem Informasi | Putri4yu@kampus.ac.id | 081234560002 |
+| 1012305 | Jingga Mawar | 2023 | Teknik Informatika | Rosee53@kampus.ac.id | 081234560003 |
+
+**Tabel Buku** (PK: id_buku)
+
+| **id_buku** | judul | isbn | pengarang | tahun_terbit | kategori | jumlah_stok | id_penerbit | nama_penerbit | kota_penerbit |
+|---|---|---|---|---|---|---|---|---|---|
+| B001 | Basis Data | 978-602-1234-01-1 | Andi Fahri | 2020 | Basis Data | 5 | P01 | Informatika Bandung | Bandung |
+| B002 | Algoritma dan Pemrograman | 978-602-1234-02-8 | Burhan Ahmad | 2019 | Pemrograman | 3 | P02 | Andi Offset | Yogyakarta |
+| B003 | Jaringan Komputer | 978-602-1234-03-5 | Uan Santoso | 2021 | Jaringan | 4 | P03 | Erlangga | Jakarta |
+
+**Tabel Peminjaman** (PK: nim, id_buku, tgl_pinjam)
+
+| **nim** | **id_buku** | **tgl_pinjam** | tgl_jatuh_tempo | tgl_kembali | status_pinjam | denda |
+|---|---|---|---|---|---|---|
+| 1012401 | B001 | 2026-09-01 | 2026-09-08 | 2026-09-07 | DIKEMBALIKAN | 0 |
+| 1012401 | B002 | 2026-09-01 | 2026-09-08 | 2026-09-10 | TERLAMBAT | 2000 |
+| 1012402 | B002 | 2026-09-10 | 2026-09-17 | NULL | DIPINJAM | 0 |
+| 1012305 | B003 | 2026-09-15 | 2026-09-22 | NULL | DIPINJAM | 0 |
+
+**Status:** tidak ada lagi ketergantungan parsial, sehingga tabel sudah 2NF. Masih ada redundansi pada tabel Buku (data penerbit berulang untuk setiap buku dari penerbit yang sama).
