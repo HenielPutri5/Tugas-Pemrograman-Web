@@ -32,3 +32,11 @@ function e(string $teks): string
 {
     return htmlspecialchars($teks, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+$guestBook = new GuestBook($pdo);
+$galat     = [];
+$nama = $email = $pesan = '';
