@@ -132,6 +132,40 @@ try {
                 <button type="submit" class="btn">Kirim pesan</button>
             </form>
         </section>
+        
+        <section aria-labelledby="judul-daftar">
+            <div class="list-head">
+                <h2 id="judul-daftar">Daftar pesan</h2>
+                <span class="count"><?= count($daftarPesan) ?> pesan</span>
+            </div>
+            <div class="card tabel-wrap">
+                <table>
+                    <thead>
+                        <tr><th>No</th><th>Nama</th><th>Email</th><th>Pesan</th><th>Tanggal kirim</th></tr>
+                    </thead>
+                    <tbody>
+                    <?php if (!$daftarPesan): ?>
+                        <tr><td colspan="5" class="kosong">Belum ada pesan. Tulis pesan pertama lewat formulir.</td></tr>
+                    <?php else: ?>
+                        <?php foreach ($daftarPesan as $i => $baris): ?>
+                            <tr>
+                                <td class="num"><?= $i + 1 ?></td>
+                                <td>
+                                    <div class="who">
+                                        <span class="avatar" aria-hidden="true"><?= e(mb_strtoupper(mb_substr($baris['nama'], 0, 1))) ?></span>
+                                        <?= e($baris['nama']) ?>
+                                    </div>
+                                </td>
+                                <td class="mail"><?= e($baris['email']) ?></td>
+                                <td class="pesan"><?= nl2br(e($baris['pesan'])) ?></td>
+                                <td class="tgl"><?= e(date('d-m-Y H:i', strtotime($baris['tanggal_kirim']))) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
 </body>
 </html>
