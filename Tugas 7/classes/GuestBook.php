@@ -76,4 +76,13 @@ class GuestBook
 
         return $stmt->fetchAll();
     }
+    
+    /** Menghapus satu pesan berdasarkan id (DELETE dengan prepared statement). */
+    public function hapus(int $id): bool
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM buku_tamu WHERE id = :id');
+        $stmt->execute([':id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
 }
