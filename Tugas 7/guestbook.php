@@ -69,3 +69,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$sukses = $_SESSION['sukses'] ?? '';
+unset($_SESSION['sukses']);
+
+try {
+    $daftarPesan = $guestBook->semua();
+} catch (PDOException $e) {
+    error_log($e->getMessage());
+    $daftarPesan = [];
+    $galat['umum'] = 'Daftar pesan tidak dapat dimuat.';
+}
