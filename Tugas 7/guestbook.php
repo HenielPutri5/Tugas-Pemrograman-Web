@@ -80,3 +80,58 @@ try {
     $daftarPesan = [];
     $galat['umum'] = 'Daftar pesan tidak dapat dimuat.';
 }
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Buku Tamu Perpustakaan</title>
+</head>
+<body>
+    <header class="topbar">
+        <div class="wrap">
+            <div class="brand">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                Buku Tamu
+            </div>
+            <span class="tagline">Perpustakaan</span>
+        </div>
+    </header>
+
+    <main class="wrap layout">
+        <section class="card form-card" aria-labelledby="judul-form">
+            <h2 id="judul-form">Tulis pesan</h2>
+            <p class="hint">Kesan, saran, atau pertanyaan Anda untuk perpustakaan.</p>
+
+            <?php if ($sukses): ?>
+                <div class="alert alert-ok" role="status"><?= e($sukses) ?></div>
+            <?php endif; ?>
+            <?php if (isset($galat['umum'])): ?>
+                <div class="alert alert-error" role="alert"><?= e($galat['umum']) ?></div>
+            <?php endif; ?>
+
+            <form method="post" action="guestbook.php" novalidate>
+                <input type="hidden" name="csrf_token" value="<?= e($_SESSION['csrf_token']) ?>">
+
+                <label for="nama">Nama</label>
+                <input type="text" id="nama" name="nama" maxlength="<?= GuestBook::MAKS_NAMA ?>"
+                       value="<?= e($nama) ?>" <?= isset($galat['nama']) ? 'class="invalid" aria-invalid="true"' : '' ?>>
+                <?php if (isset($galat['nama'])): ?><p class="error"><?= e($galat['nama']) ?></p><?php endif; ?>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" maxlength="<?= GuestBook::MAKS_EMAIL ?>"
+                       value="<?= e($email) ?>" <?= isset($galat['email']) ? 'class="invalid" aria-invalid="true"' : '' ?>>
+                <?php if (isset($galat['email'])): ?><p class="error"><?= e($galat['email']) ?></p><?php endif; ?>
+
+                <label for="pesan">Pesan</label>
+                <textarea id="pesan" name="pesan" rows="5" maxlength="<?= GuestBook::MAKS_PESAN ?>"
+                          <?= isset($galat['pesan']) ? 'class="invalid" aria-invalid="true"' : '' ?>><?= e($pesan) ?></textarea>
+                <?php if (isset($galat['pesan'])): ?><p class="error"><?= e($galat['pesan']) ?></p><?php endif; ?>
+
+                <button type="submit" class="btn">Kirim pesan</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
