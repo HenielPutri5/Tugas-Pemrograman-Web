@@ -46,4 +46,17 @@ class GuestBook
 
         return $galat;
     }
+    
+    /** Menyimpan satu pesan (INSERT dengan prepared statement). */
+    public function simpan(string $nama, string $email, string $pesan): bool
+    {
+        $sql  = 'INSERT INTO buku_tamu (nama, email, pesan) VALUES (:nama, :email, :pesan)';
+        $stmt = $this->pdo->prepare($sql);
+
+        return $stmt->execute([
+            ':nama'  => $nama,
+            ':email' => $email,
+            ':pesan' => $pesan,
+        ]);
+    }
 }
