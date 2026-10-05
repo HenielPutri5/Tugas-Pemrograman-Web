@@ -59,4 +59,21 @@ class GuestBook
             ':pesan' => $pesan,
         ]);
     }
+    
+    /**
+     * Mengambil pesan terbaru (SELECT dengan prepared statement).
+     * @return array<int,array<string,mixed>>
+     */
+    public function semua(int $batas = 50): array
+    {
+        $sql  = 'SELECT id, nama, email, pesan, tanggal_kirim
+                 FROM buku_tamu
+                 ORDER BY tanggal_kirim DESC, id DESC
+                 LIMIT :batas';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':batas', $batas, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 }
