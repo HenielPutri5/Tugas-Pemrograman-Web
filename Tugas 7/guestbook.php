@@ -41,7 +41,6 @@ $guestBook = new GuestBook($pdo);
 $galat     = [];
 $nama = $email = $pesan = '';
 
-// ---------- Proses formulir ----------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tokenKiriman = $_POST['csrf_token'] ?? '';
 
@@ -55,4 +54,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pesan = trim((string) ($_POST['pesan'] ?? ''));
 
     $galat = $guestBook->validasi($nama, $email, $pesan);
+
+    
+    if (!$galat) {
+        try {
+            $guestBook->simpan($nama, $email, $pesan);
+            $_SESSION['sukses']     = 'Terima kasih, pesan Anda sudah tersimpan.';
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // token baru
+            header('Location: guestbook.php'); // Post/Redirect/Get: cegah kirim ganda saat refresh
+            exit;
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            $galat['umum'] = 'Pesan gagal disimpan. Silakan coba lagi.';
+        }
+    }
 }
