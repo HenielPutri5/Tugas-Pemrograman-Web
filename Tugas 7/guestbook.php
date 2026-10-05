@@ -5,10 +5,10 @@ session_start();
 require_once __DIR__ . '/classes/GuestBook.php';
 
 // ---------- Konfigurasi koneksi (sesuaikan dengan lingkungan lokal) ----------
-const DB_HOST = 'localhost';
-const DB_NAME = 'perpustakaan';
-const DB_USER = 'root';
-const DB_PASS = '';
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'perpustakaan');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
 
 try {
     $pdo = new PDO(
@@ -41,6 +41,7 @@ $guestBook = new GuestBook($pdo);
 $galat     = [];
 $nama = $email = $pesan = '';
 
+// Formulir //
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tokenKiriman = $_POST['csrf_token'] ?? '';
 
@@ -48,13 +49,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         http_response_code(403);
         exit('Permintaan ditolak: token CSRF tidak valid.');
     }
+   // Aksi hapus pesan (dilindungi token CSRF di atas, id divalidasi sebagai integer)
+    if (($_POST['aksi'] ?? '') === 'hapus') {
+        $id = filter_var($_POST['id'] ?? '', FILTER_VALIDATE_INT);
+        if ($id !== false && $id > 0) {
+            try {
+                $_SESSION['sukses'] = $guestBook->hapus($id)
+                    ? 'Pesan berhasil dihapus.'
+                    : 'Pesan tidak ditemukan.';
+            } catch (PDOException $e) {
+                error_log($e->getMessage());
+                $_SESSION['gagal'] = 'Pesan gagal dihapus. Silakan coba lagi.';
+            }
+        }
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        header('Location: guestbook.php');
+        exit;
+    }
 
     $nama  = trim((string) ($_POST['nama']  ?? ''));
     $email = trim((string) ($_POST['email'] ?? ''));
     $pesan = trim((string) ($_POST['pesan'] ?? ''));
 
     $galat = $guestBook->validasi($nama, $email, $pesan);
-
     
     if (!$galat) {
         try {
@@ -72,6 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $sukses = $_SESSION['sukses'] ?? '';
 unset($_SESSION['sukses']);
+$gagal = $_SESSION['gagal'] ?? '';
+unset($_SESSION['gagal']);
 
 try {
     $daftarPesan = $guestBook->semua();
@@ -195,6 +214,9 @@ try {
             <?php if ($sukses): ?>
                 <div class="alert alert-ok" role="status"><?= e($sukses) ?></div>
             <?php endif; ?>
+            <?php if ($gagal): ?>
+                <div class="alert alert-error" role="alert"><?= e($gagal) ?></div>
+            <?php endif; ?>
             <?php if (isset($galat['umum'])): ?>
                 <div class="alert alert-error" role="alert"><?= e($galat['umum']) ?></div>
             <?php endif; ?>
@@ -229,11 +251,11 @@ try {
             <div class="card tabel-wrap">
                 <table>
                     <thead>
-                        <tr><th>No</th><th>Nama</th><th>Email</th><th>Pesan</th><th>Tanggal kirim</th></tr>
+                        <tr><th>No</th><th>Nama</th><th>Email</th><th>Pesan</th><th>Tanggal kirim</th><th>Aksi</th></tr>
                     </thead>
                     <tbody>
                     <?php if (!$daftarPesan): ?>
-                        <tr><td colspan="5" class="kosong">Belum ada pesan. Tulis pesan pertama lewat formulir.</td></tr>
+                        <tr><td colspan="6" class="kosong">Belum ada pesan. Tulis pesan pertama lewat formulir.</td></tr>
                     <?php else: ?>
                         <?php foreach ($daftarPesan as $i => $baris): ?>
                             <tr>
@@ -247,6 +269,15 @@ try {
                                 <td class="mail"><?= e($baris['email']) ?></td>
                                 <td class="pesan"><?= nl2br(e($baris['pesan'])) ?></td>
                                 <td class="tgl"><?= e(date('d-m-Y H:i', strtotime($baris['tanggal_kirim']))) ?></td>
+                                <td class="aksi">
+                                    <form method="post" action="guestbook.php"
+                                          onsubmit="return confirm('Hapus pesan dari <?= e(addslashes($baris['nama'])) ?>?');">
+                                        <input type="hidden" name="csrf_token" value="<?= e($_SESSION['csrf_token']) ?>">
+                                        <input type="hidden" name="aksi" value="hapus">
+                                        <input type="hidden" name="id" value="<?= (int) $baris['id'] ?>">
+                                        <button type="submit" class="hapus">Hapus</button>
+                                    </form>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
