@@ -40,3 +40,19 @@ if (empty($_SESSION['csrf_token'])) {
 $guestBook = new GuestBook($pdo);
 $galat     = [];
 $nama = $email = $pesan = '';
+
+// ---------- Proses formulir ----------
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $tokenKiriman = $_POST['csrf_token'] ?? '';
+
+    if (!is_string($tokenKiriman) || !hash_equals($_SESSION['csrf_token'], $tokenKiriman)) {
+        http_response_code(403);
+        exit('Permintaan ditolak: token CSRF tidak valid.');
+    }
+
+    $nama  = trim((string) ($_POST['nama']  ?? ''));
+    $email = trim((string) ($_POST['email'] ?? ''));
+    $pesan = trim((string) ($_POST['pesan'] ?? ''));
+
+    $galat = $guestBook->validasi($nama, $email, $pesan);
+}
